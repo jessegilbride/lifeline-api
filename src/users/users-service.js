@@ -11,12 +11,12 @@ const UsersService = {
       .first()
       .then((user) => !!user); // double exclamation coerces the result to true if the operand exists
   },
-  /* getUserByUserName(db, user_name) { // this is not yet working
+  getUserByUserName(db, user_name) { // this is not yet working
     return db('users')
       .where({ user_name })
       .first()
     // return db.raw('SELECT * FROM users WHERE user_name = ?', user_name)
-  }, */
+  },
   insertUser(db, newUser) {
     return db
       .insert(newUser)

@@ -57,7 +57,7 @@ async function checkLineExists(req, res, next) {
       });
     }
     
-    console.log(line);
+    console.log('getLineById(db, line_id) ... ',line);
 
     res.line = line;
     next();

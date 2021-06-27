@@ -4,18 +4,18 @@ const ItemsService = {
   getAllItemsForLine(db, line_id) {
     return db.from('line_entries').select('*').where({ line_id });
   },
-  getItemById(db, item_id) {
-    return ItemsService.getAllItemsForLine(db).where({ item_id }).first();
+  getItemById(db, id) {
+    return db.from('line_entries').where({ id }).first();
   },
-  insertLine(db, newLine) {
+  insertItem(db, newItem) {
     return db
-      .insert(newLine)
-      .into('lines')
+      .insert(newItem)
+      .into('line_entries')
       .returning('*')
-      .then(([line]) => line)
-      .then((line) => LinesService.getById(db, line.id));
+      .then(([item]) => item)
+      .then((item) => ItemsService.getItemById(db, item.id));
   },
-  deleteLine(db, id) {
+  deleteItem(db, id) {
     return db('lines')
       .where({'id': id})
       .delete()
@@ -27,7 +27,7 @@ const ItemsService = {
       line_id: item.line_id,
       title: xss(item.title),
       content: xss(item.content),
-      entry_date: new Date(item.entry_date)
+      entry_date: item.entry_date
     };
   }
 };

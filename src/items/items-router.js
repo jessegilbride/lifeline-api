@@ -15,14 +15,21 @@ itemsRouter
       .catch(next);
   })
   .post(requireAuth, jsonBodyParser, (req, res, next) => {
-    const { line_name, description } = req.body;
-    const newLine = { line_name, description };
+    // id, line_id, title, content, entry_date
+    const { line_id, title, content, entry_date } = req.body;
+    const newItem = { line_id, title, content, entry_date };
 
-    newLine.user_id = req.user.id; // set user_id in newLine object
+    // newItem.user_id = req.user.id; // set user_id in newLine object
 
-    ItemsService.insertLine(req.app.get('db'), newLine)
-      .then((line) => {
-        res.status(201).json(ItemsService.serializeLine(line));
+    ItemsService.insertItem(req.app.get('db'), newItem)
+      /* .then(res => {
+        console.log('response from insertItem() ... ', res);
+        return res;
+      }) */
+      .then((item) => ItemsService.serializeItem(item))
+      .then((item) => {
+        // res.status(201).json(ItemsService.serializeItem(item));
+        res.status(201).json(item);
       })
       .catch(next);
   });
@@ -32,7 +39,9 @@ itemsRouter
   // .all(requireAuth) // remove authentication for MVP
   .all(checkItemExistsAndGetIt)
   .get((req, res) => {
-    res.json(ItemsService.serializeLine(res.line));
+    // console.log('req ... ', req);
+    // console.log('res ... ', res);
+    res.json(ItemsService.serializeItem(res.item));
   })
   /* .delete((req, res, next) => {
     ItemsService.deleteItem(req.app.get('db'), req.params.item_id)
@@ -52,7 +61,7 @@ async function checkItemExistsAndGetIt(req, res, next) {
       });
     }
     
-    console.log(item);
+    // console.log('getItemById(db, item_id) ... ', item);
 
     res.item = item;
     next();

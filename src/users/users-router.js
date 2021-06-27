@@ -12,11 +12,16 @@ usersRouter
   // const user = UsersService.getUserByUserName(req.app.get('db'), req.params.user_name); // attempt 1
   // const user = getName(req.app.get('db'), req.params.user_name); // attempt 2
   // const user = getName(req, res); // attempt 3
-
-  // console.log(user)
-
   // return res = user.full_name;
   // return res.user = user
+
+  UsersService.getUserByUserName(
+    req.app.get("db"),
+    req.params.user_name
+  ).then((user) => {
+    console.log('getUserByUserName() ... ', user)
+    res.json(user)
+  });
 })
 .post('/', jsonBodyParser, (req, res, next) => {
   const { password, user_name, full_name } = req.body;
